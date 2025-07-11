@@ -236,11 +236,41 @@
             background-color: white;
         }
         
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-        }
+        .product-carousel {
+    position: relative;
+    overflow: hidden;
+}
+
+.product-slides {
+    display: flex;
+    transition: transform 0.5s ease;
+    gap: 30px;
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--primary);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.prev-btn {
+    left: 10px;
+}
+
+.next-btn {
+    right: 10px;
+}
         
         .product-card {
             background-color: var(--light);
@@ -357,7 +387,7 @@
         .cta {
             padding: 100px 0;
             text-align: center;
-            background: linear-gradient(rgba(76, 175, 80, 0.9), rgba(76, 175, 80, 0.9)), url('https://placehold.co/1200x800') center/cover;
+            background: linear-gradient(rgba(76, 175, 80, 0.9), rgba(76, 175, 80, 0.9)), url('https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/4996ed71-62f2-4cc9-9064-69b68c05560c.png') center/cover;
             color: white;
         }
         
@@ -502,10 +532,12 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
+    <!-- Hero Carousel -->
     <section class="hero" id="inicio">
-        <div class="container">
-            <div class="hero-content">
+        <div class="hero-carousel">
+            <div class="hero-slide active" style="background-image: url('https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5844e37e-553f-4e14-980d-e7a8dda5e261.png');">
+                <div class="container">
+                    <div class="hero-content">
                 <h1>Jabones Ecológicos Hechos con Aceite Reciclado</h1>
                 <p>Transformamos el aceite usado en productos de limpieza sostenibles para tu hogar. Cada compra ayuda a reducir la contaminación de nuestras aguas.</p>
                 <div style="display: flex; gap: 15px;">
@@ -525,7 +557,7 @@
             </div>
             <div class="about-content">
                 <div class="about-img">
-                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/036d77ef-4cec-495e-91a1-42080b1fd4d2.png" alt="Equipo de Ecoil trabajando en el laboratorio, mezclando aceites reciclados con soda cáustica para crear jabones ecológicos" />
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/63a8e180-9a36-4f56-9a1a-022af9d021b6.png" alt="Nuestro equipo trabajando en la producción de jabones ecológicos a partir de aceite reciclado" />
                 </div>
                 <div class="about-text">
                     <h3>Del desecho al producto</h3>
@@ -576,7 +608,8 @@
                 <h2>Nuestros Productos</h2>
                 <p>Jabones y detergentes ecológicos hechos 100% de aceite reciclado</p>
             </div>
-            <div class="product-grid">
+            <div class="product-carousel">
+                <div class="product-slides">
                 <div class="product-card">
                     <div class="product-img">
                         <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/c43f7b67-07ad-4677-8b6a-60580158f6ad.png" alt="Jabón de coco Ecoil en forma redonda, color marfil natural con textura suave y aroma a coco fresco" />
@@ -776,6 +809,36 @@
             });
         });
         
+        // Hero Carousel
+        const heroSlides = document.querySelectorAll('.hero-slide');
+        let currentHeroSlide = 0;
+
+        function showHeroSlide(n) {
+            heroSlides.forEach(slide => slide.classList.remove('active'));
+            currentHeroSlide = (n + heroSlides.length) % heroSlides.length;
+            heroSlides[currentHeroSlide].classList.add('active');
+        }
+
+        setInterval(() => {
+            showHeroSlide(currentHeroSlide + 1);
+        }, 5000);
+
+        // Product Carousel
+        const productSlides = document.querySelector('.product-slides');
+        const products = document.querySelectorAll('.product-card');
+        let currentProduct = 0;
+        const productWidth = products[0].offsetWidth + 30; // width + gap
+
+        document.querySelector('.next-btn').addEventListener('click', () => {
+            currentProduct = (currentProduct + 1) % products.length;
+            productSlides.style.transform = `translateX(-${currentProduct * productWidth}px)`;
+        });
+
+        document.querySelector('.prev-btn').addEventListener('click', () => {
+            currentProduct = (currentProduct - 1 + products.length) % products.length;
+            productSlides.style.transform = `translateX(-${currentProduct * productWidth}px)`;
+        });
+
         // Trigger animations on scroll
         window.addEventListener('scroll', animateOnScroll);
         window.addEventListener('load', animateOnScroll);
